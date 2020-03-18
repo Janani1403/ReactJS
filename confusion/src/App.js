@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Menu from './components/MenuComponent';
-<Menu />
 import { Navbar, NavbarBrand } from 'reactstrap';
 import { DISHES } from './shared/dishes';
 
-. . .
 
 class App extends Component {
   constructor(props) {
@@ -15,9 +13,10 @@ class App extends Component {
       dishes: DISHES
     };
   }
+  render(){
+	return(<div><Menu dishes={this.state.dishes} /> </div>);
+  }
+}
 
-. . .
-
-<Menu dishes={this.state.dishes} />
   
 export default App;
