@@ -14,7 +14,11 @@ class App extends Component {
     };
   }
   render(){
-	return(<div><Menu dishes={this.state.dishes} /> </div>);
+	return (
+      <div className="App">
+        <Main />
+      </div>
+    );
   }
 }
 

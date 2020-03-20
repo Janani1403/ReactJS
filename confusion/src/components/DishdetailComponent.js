@@ -31,7 +31,7 @@ class DishDetail extends Component {
                 <Media tag="li">
                   <Media body className="ml-5">
                    <p>{comments.comment}</p>
-				   <p>--{comments.author} , {comments.date}</p>
+				   <p>--{comments.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
                   </Media>
                 </Media>
               </div>
