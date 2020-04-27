@@ -27,7 +27,7 @@ const minLength = (len) => (val) => val && (val.length >= len);
             );
     }
 
-    function RenderComments({dish}) {
+    function RenderComments({comments, addComment, dishId}) {
 		if(dish!=null){
 			const comments = dish.comments.map((comments) => {
             return (
@@ -76,8 +76,11 @@ const minLength = (len) => (val) => val && (val.length >= len);
 							<RenderDish dish={props.dish} />
 						</div>
 						<div className="col-12 col-md-5 m-1">
-							<RenderComments comments={props.comments} />
-							<CommentForm />
+							<RenderComments comments={props.comments}
+								addComment={props.addComment}
+								dishId={props.dish.id}
+							/>
+							<CommentForm dishId={dishId} addComment={addComment} />
 						</div>
 					</div>
                 </div>
@@ -96,7 +99,7 @@ class CommentForm extends Component {
         };
         this.toggleModal = this.toggleModal.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
-
+		this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     toggleNav() {
@@ -115,6 +118,7 @@ class CommentForm extends Component {
         this.toggleModal();
     }
     handleSubmit(values) {
+		this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
         alert('Current State is: ' + JSON.stringify(values));
     }
 
