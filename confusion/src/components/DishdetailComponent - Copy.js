@@ -1,90 +1,20 @@
 import React, { Component } from 'react';
+import {
+    Card, CardImg, CardText, CardBody,
+    CardTitle, Breadcrumb, BreadcrumbItem
+} from 'reactstrap';
 
-import { Card, CardImg, CardText, CardBody,
-    CardTitle, Media, Breadcrumb, BreadcrumbItem,
-	Button, Modal, ModalHeader, ModalBody, Label, Row, Col	} from 'reactstrap';
+
+import {
+    Button, Modal, ModalHeader, ModalBody, Label, Row, Col
+} from 'reactstrap';
+
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
-
-    function RenderDish({dish}) {
-		if (dish != null)
-            return(
-                <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
-                    <CardBody>
-                      <CardTitle>{dish.name}</CardTitle>
-                      <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
-            );
-        else
-            return(
-                <div></div>
-            );
-    }
-
-    function RenderComments({dish}) {
-		if(dish!=null){
-			const comments = dish.comments.map((comments) => {
-            return (
-              <div key={comments.id} className="col-12 mt-5">
-                <Media tag="li">
-                  <Media body className="ml-5">
-                   <p>{comments.comment}</p>
-				   <p>--{comments.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comments.date)))}</p>
-                  </Media>
-                </Media>
-              </div>
-            );
-			});
-		return(
-			<div className="container">
-				<div className="row">
-				  <h4>Comments:</h4>	
-				  <Media list>
-					  {comments}
-				  </Media>
-				</div>
-			</div>
-			);
-		}
-			
-		else
-			return(<div></div>);
-    }
-
-    const  DishDetail = (props) => {
-		if(props.dish !=null)
-		return (
-                <div className="container">
-					<div className="row">
-						<Breadcrumb>
-							<BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-							<BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-						</Breadcrumb>
-						<div className="col-12">
-							<h3>{props.dish.name}</h3>
-							<hr />
-						</div>                
-					</div>
-					<div className="row">
-						<div className="col-12 col-md-5 m-1">
-							<RenderDish dish={props.dish} />
-						</div>
-						<div className="col-12 col-md-5 m-1">
-							<RenderComments comments={props.comments} />
-							<CommentForm />
-						</div>
-					</div>
-                </div>
-            );
-		else
-			return(<div></div>);
-    }
 
 class CommentForm extends Component {
     constructor(props) {
@@ -182,7 +112,7 @@ class CommentForm extends Component {
                                     </Button>
                                 </Col>
                             </Row>
-						
+
                         </LocalForm>
 
                     </ModalBody>
@@ -192,4 +122,74 @@ class CommentForm extends Component {
     }
 }
 
-export default DishDetail;
+function SelectedDish({ sDish }) {
+
+    return (
+        <Card>
+            <CardImg width="100%" src={sDish.image} alt={sDish.name} />
+            <CardBody className="m-1">
+                <CardTitle>{sDish.name}</CardTitle>
+                <CardText>{sDish.description}</CardText>
+            </CardBody>
+        </Card>
+    );
+}
+
+function SelectComments({ com }) {
+    return (
+        <div key={com.id} className="m-2">
+            <li>{com.comment}</li>
+            <li className="list-inline-item">--{com.author}</li>
+            <li className="list-inline-item"> ,{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(com.date)))}</li>
+        </div>
+    )
+}
+
+
+
+
+const DishDetails = (props) => {
+    const dishdetails = props.dish;
+    console.log(dishdetails);
+    if (dishdetails != null) {
+        const menu = props.comments.map((dish) => {
+            return (
+                <SelectComments com={dish} />
+            );
+        });
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+
+                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        <SelectedDish sDish={dishdetails} />
+                    </div>
+                    <div className="col-12 col-md-5 m-1">
+                        <ul className="list-unstyled">
+                            <li>Comments</li>
+                            {menu}
+                        </ul>
+                        <CommentForm />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    else {
+        return (
+            <div></div>
+        )
+    }
+
+}
+export default DishDetails;
